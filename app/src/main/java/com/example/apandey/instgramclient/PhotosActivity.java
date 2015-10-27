@@ -1,6 +1,7 @@
 package com.example.apandey.instgramclient;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +23,8 @@ public class PhotosActivity extends AppCompatActivity {
     public static String CLIENT_ID = "e362a7a912da413e973bde8466af9ec1";
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter aPhotos;
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,27 @@ public class PhotosActivity extends AppCompatActivity {
         ListView lvPhotos = (ListView)findViewById(R.id.lvPhotos);
         lvPhotos.setAdapter(aPhotos);
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchPopularPhotos();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
     }
+
+
 
     private void fetchPopularPhotos() {
         /**
